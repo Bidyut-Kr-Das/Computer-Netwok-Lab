@@ -20,7 +20,7 @@ int main() {
     // calculate the XOR of the previous two results
     int xorFinal = xor1 ^ xor2;
 
-    if(xorFinal == 0) {
+    if(xorFinal == 1) {
         codeword += '9'; // append '9' to the codeword
         std::cout << "Error condition met. The final codeword is: " << codeword << "\n";
     } else {

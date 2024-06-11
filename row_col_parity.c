@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#define ROWS 3
-#define COLS 3
+#define ROWS 4
+#define COLS 5
 
 // Function to calculate parity
 int parity(int num) {
