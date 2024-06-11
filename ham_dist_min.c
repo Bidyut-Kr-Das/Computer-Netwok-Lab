@@ -40,5 +40,8 @@ int main()
 
     printf("The minimal Hamming distance is %d\n", d_min);
 
+    printf("No of error can be detected  = %d\n", d_min-1);
+    printf("No of error can be corrected = %d\n", (d_min-1)/2);
+
     return 0;
 }
