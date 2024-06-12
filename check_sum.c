@@ -1,27 +1,64 @@
 #include <stdio.h>
+#include <stdint.h>
 
-#define FRAME_SIZE 3
-
-// Function to calculate checksum
-int calculateChecksum(int frame[FRAME_SIZE]) {
-    int i, sum = 0;
-    for(i = 0; i < FRAME_SIZE; i++) {
-        sum += frame[i];
+// Function to calculate checksum in decimal
+uint8_t calculateChecksum(uint8_t *data, size_t length) {
+    uint8_t checksum = 0;
+    for (size_t i = 0; i < length; i++) {
+        checksum += data[i];
+        // Data folding: If overflow occurs, wrap around and add 1
+        if (checksum < data[i]) {
+            checksum++;
+        }
     }
-    return sum % 256;  // Assuming 8-bit data
+    // Complement the checksum to get the final checksum in decimal
+    return ~checksum;
+}
+
+// Function to verify checksum in decimal
+int verifyChecksum(uint8_t *data, size_t length, uint8_t receivedChecksum) {
+    uint8_t checksum = calculateChecksum(data, length);
+    // Check if the calculated checksum matches the received checksum
+    return checksum == receivedChecksum;
+}
+
+// Function to print binary representation of a decimal number
+void printBinary(uint8_t number) {
+    for (int i = 7; i >= 0; i--) {
+        printf("%d", (number >> i) & 1);
+    }
 }
 
 int main() {
-    int frame[FRAME_SIZE], i, checksum;
+    uint8_t data[3];
+    uint8_t receivedChecksum;
+    int temp;
 
-    printf("Enter the elements of the frame:\n");
-    for(i = 0; i < FRAME_SIZE; i++) {
-        scanf("%d", &frame[i]);
+    // Input data in decimal
+    printf("Enter 3 decimal values for the data frame: ");
+    for (int i = 0; i < 3; i++) {
+        scanf("%d", &temp);
+        data[i] = (uint8_t)temp;
     }
 
-    checksum = calculateChecksum(frame);
+    // Input checksum in decimal
+    printf("Enter the checksum value in decimal: ");
+    scanf("%d", &temp);
+    receivedChecksum = (uint8_t)temp;
 
-    printf("Checksum: %d\n", checksum);
+    // Calculate checksum for the input data
+    uint8_t checksum = calculateChecksum(data, 3);
+    printf("Calculated Checksum (Decimal): %u\n", checksum);
+    printf("Calculated Checksum (Binary): ");
+    printBinary(checksum);
+    printf("\n");
+
+    // Verify checksum
+    if (verifyChecksum(data, 3, receivedChecksum)) {
+        printf("Data is correct.\n");
+    } else {
+        printf("Error detected in data.\n");
+    }
 
     return 0;
 }
